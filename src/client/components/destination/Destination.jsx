@@ -77,6 +77,7 @@ const Destination = () => {
                     type="text"
                     name="city"
                     value={city}
+                    onChange={(event) => setCity(event.target.value)}
                     className="w-full text-sm lg:text-base p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Destination e.g., Berlin"
                     required
