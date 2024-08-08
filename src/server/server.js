@@ -1,4 +1,3 @@
-// Import required modules
 import express from "express";
 import fetch from "node-fetch";
 import path from "path";
@@ -26,44 +25,77 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, "../../dist")));
 
 // Setup Server
-const port = import.meta.env.PORT || 8000;
+const port = process.env.PORT || 8000; // Updated to use standard PORT env variable
 app.listen(port, () => {
   console.log(`Server started successfully: Server listening on port ${port}`);
 });
 
 // Store environment variable API key in a variable
-const apiKey = import.meta.env.VITE_API_KEY;
+const apiKey = process.env.VITE_API_KEY;
 
 // GET route to fetch weather data
 app.get("/weather", async (req, res) => {
   try {
-    // Obtain city name from user input or default to Berlin
     const city = req.query.city || "Berlin";
-    // Get the current date in YYYY-MM-DD format
-    const currentDate = new Date().toISOString().slice(0, 10);
-    const date = req.query.date || currentDate;
-    console.log(currentDate);
+    const date = req.query.date || new Date().toISOString().slice(0, 10);
 
-    // Geocoding API request to obtain latitude and longitude from city name
     const geocodingUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${apiKey}`;
     const geocodingResponse = await fetch(geocodingUrl);
+    if (!geocodingResponse.ok) throw new Error("Geocoding API error");
     const geocodingData = await geocodingResponse.json();
-    console.log(geocodingData);
 
-    // Extract latitude and longitude from the Geocoding API response
-    const latitude = geocodingData[0].lat;
-    const lat = latitude.toFixed(0);
-    const longitude = geocodingData[0].lon;
-    const lon = longitude.toFixed(0);
+    const latitude = geocodingData[0]?.lat;
+    const longitude = geocodingData[0]?.lon;
 
-    // OpenWeather API request using the obtained latitude and longitude
-    const openWeatherUrl = `https://api.openweathermap.org/data/3.0/onecall/day_summary?lat=${lat}&lon=${lon}&date=${date}&appid=${apiKey}`;
-    console.log(openWeatherUrl);
+    if (!latitude || !longitude) throw new Error("Invalid city data");
+
+    const openWeatherUrl = `https://api.openweathermap.org/data/3.0/onecall/day_summary?lat=${latitude}&lon=${longitude}&date=${date}&appid=${apiKey}`;
     const openWeatherResponse = await fetch(openWeatherUrl);
+    if (!openWeatherResponse.ok) throw new Error("OpenWeather API error");
     const openWeatherData = await openWeatherResponse.json();
+
     res.json(openWeatherData);
   } catch (err) {
-    console.log("Error fetching weather data:", err);
+    console.error("Error fetching weather data:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Fetch city name from user coordinates
+app.get("/user-location", async (req, res) => {
+  try {
+    const { lat, lon } = req.query;
+
+    console.log(`Received coordinates: lat=${lat}, lon=${lon}`);
+
+    if (!lat || !lon) {
+      console.error("Latitude and longitude are missing in the request");
+      return res.status(400).send("Latitude and longitude are required");
+    }
+
+    const reverseGeocodingUrl = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+    console.log(
+      `Calling reverse geocoding API with URL: ${reverseGeocodingUrl}`
+    );
+
+    const reverseGeocodingResponse = await fetch(reverseGeocodingUrl);
+    if (!reverseGeocodingResponse.ok) {
+      console.error(
+        `Reverse Geocoding API returned an error: ${reverseGeocodingResponse.statusText}`
+      );
+      throw new Error("Reverse Geocoding API error");
+    }
+
+    const reverseGeocodingData = await reverseGeocodingResponse.json();
+    console.log("Reverse Geocoding API response:", reverseGeocodingData);
+
+    const cityName = reverseGeocodingData[0]?.name || "Unknown location";
+
+    console.log(`Determined city name: ${cityName}`);
+
+    res.json({ city: cityName });
+  } catch (err) {
+    console.error("Error fetching city name:", err);
     res.status(500).send("Internal Server Error");
   }
 });
