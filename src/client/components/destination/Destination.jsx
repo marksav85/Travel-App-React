@@ -52,7 +52,7 @@ const Destination = () => {
   return (
     <div
       id="destination-container"
-      className="bg-white shadow-lg rounded-lg w-full max-w-md flex flex-col h-full"
+      className="bg-white shadow-lg rounded-lg w-full max-w-md flex flex-col h-600px"
     >
       <div
         id="destination-header"
@@ -141,11 +141,17 @@ const Destination = () => {
           className="bg-gray-100 p-2 rounded-b-lg text-start text-sm text-gray-600 
                      md:p-3  lg:p-4"
         >
-          <p>
-            * Future forecast available for up to 1.5 years in the future
-            <br />* Historical weather data available up until 40+ years in the
-            past
-          </p>
+          <div>
+            <p>* Future forecast available for up to 1.5 years in the future</p>
+            <p>
+              ** Historical weather data available up until 40+ years in the
+              past
+            </p>
+            <p>
+              *** Temperature, cloud, and rainfall are measured as averages
+              throughout the day
+            </p>
+          </div>
         </div>
       </div>
     </div>

@@ -23,7 +23,7 @@ const Weather = () => {
 
   if (!weatherData) {
     return (
-      <div className="w-full max-w-md bg-white flex shadow-lg rounded-lg relative">
+      <div className="w-full h-600px max-w-md bg-white flex shadow-lg rounded-lg relative">
         <Lottie
           animationData={travelAnimation}
           height={200}
@@ -37,8 +37,8 @@ const Weather = () => {
   }
 
   return (
-    <div className="bg-white shadow-lg rounded-lg w-full max-w-md mx-auto">
-      <div id="weather-card" className="flex flex-col h-full">
+    <div className="bg-white shadow-lg rounded-lg w-full max-w-md mx-auto h-600px">
+      <div id="weather-card" className="flex flex-col ">
         <div
           id="weather-header"
           className="bg-blue-500 text-white rounded-t-lg flex-shrink-0 
@@ -112,16 +112,6 @@ const Weather = () => {
                 </div>
               </div>
             </div>
-          </div>
-
-          <div
-            id="weather-footer"
-            className="bg-gray-100 p-4 rounded-b-lg text-center text-sm text-gray-600"
-          >
-            <p id="weather-footer-text">
-              * Temperature, cloud, and rainfall are measured as averages
-              throughout the day
-            </p>
           </div>
         </div>
       </div>
