@@ -1,15 +1,16 @@
-import { useContext } from "react";
-import WeatherContext from "../../context/WeatherContextProvider";
-import Lottie from "lottie-react";
-import travelAnimation from "../../../assets/travel-animation.json";
-import raindropIcon from "/media/weather-icons/raindrop.svg";
-import cloudyIcon from "/media/weather-icons/cloudy.svg";
+import { useContext } from "react"; // Import the useContext hook to access context values
+import WeatherContext from "../../context/WeatherContextProvider"; // Import the WeatherContext to get weather-related data
+import Lottie from "lottie-react"; // Import Lottie for rendering animations
+import travelAnimation from "../../../assets/travel-animation.json"; // Import the travel animation JSON for Lottie
+import raindropIcon from "/media/weather-icons/raindrop.svg"; // Import raindrop icon
+import cloudyIcon from "/media/weather-icons/cloudy.svg"; // Import cloudy icon
 
+// Helper function to format date strings into a more human-readable format
 const formatDate = (dateString) => {
-  // Parse the date string into a Date object
+  // Parse the provided date string into a JavaScript Date object
   const date = new Date(dateString);
 
-  // Use Intl.DateTimeFormat to format the date
+  // Format the date into a readable string, e.g., "12 August 2024"
   return new Intl.DateTimeFormat("en-GB", {
     day: "numeric",
     month: "long",
@@ -17,37 +18,44 @@ const formatDate = (dateString) => {
   }).format(date);
 };
 
+// The Weather component displays weather information based on the current context
 const Weather = () => {
+  // Destructure necessary values from WeatherContext using useContext hook
   const { city, temperatureCelsius, weatherData, tempIcon, weatherIcon } =
     useContext(WeatherContext);
 
+  // If no weather data is available, render a loading animation
   if (!weatherData) {
     return (
       <div className="w-full h-600px max-w-md bg-white flex shadow-lg rounded-lg relative">
+        {/* Render a Lottie animation while waiting for data */}
         <Lottie
-          animationData={travelAnimation}
-          height={200}
-          width={200}
-          loop={true}
-          autoplay={true}
-          rendererSettings={{ preserveAspectRatio: "xMidYMid slice" }}
+          animationData={travelAnimation} // Use the travel animation
+          height={200} // Set the height of the animation
+          width={200} // Set the width of the animation
+          loop={true} // Ensure the animation loops
+          autoplay={true} // Autoplay the animation
+          rendererSettings={{ preserveAspectRatio: "xMidYMid slice" }} // Maintain aspect ratio
         />
       </div>
     );
   }
 
+  // If weather data is available, render the weather information
   return (
     <div className="bg-white shadow-lg rounded-lg w-full max-w-md mx-auto h-600px">
-      <div id="weather-card" className="flex flex-col ">
+      <div id="weather-card" className="flex flex-col">
+        {/* Weather card header displaying the city name */}
         <div
           id="weather-header"
-          className="bg-blue-500 text-white rounded-t-lg flex-shrink-0 
-                   p-2 md:p-4 lg:p-6"
+          className="bg-blue-500 text-white rounded-t-lg flex-shrink-0 p-2 md:p-4 lg:p-6"
         >
+          {/* City name displayed in the header */}
           <h2 className="text-lg md:text-xl lg:text-2xl font-semibold text-center">
             {city}
           </h2>
         </div>
+        {/* Weather card body containing the weather details */}
         <div className="flex flex-col flex-grow">
           <div
             id="weather-card-body"
@@ -55,9 +63,10 @@ const Weather = () => {
           >
             <div id="weather-details" className="space-y-4">
               <div className="flex flex-col items-start">
+                {/* Display the formatted date */}
                 <div
                   id="weather-date"
-                  className="weather-data flex justify-start text-lg md:text-xl lg:text-2x"
+                  className="weather-data flex justify-start text-lg md:text-xl lg:text-2xl"
                 >
                   <h2 className="text-lg md:text-xl lg:text-2xl font-semibold text-center">
                     {formatDate(weatherData.date)}
@@ -65,45 +74,64 @@ const Weather = () => {
                 </div>
               </div>
               <div>
+                {/* Cloud cover display section */}
                 <div className="flex flex-grow">
                   <div className="flex-1 text-lg md:text-xl lg:text-2xl">
-                    <img src={cloudyIcon} className="w-20 h-20" alt="" />
+                    {/* Cloudy icon */}
+                    <img src={cloudyIcon} className="w-20 h-20" alt="Cloudy" />
                   </div>
                   <div
                     id="weather-clouds"
                     className="weather-data flex items-center flex-1 text-lg md:text-xl lg:text-2xl"
                   >
+                    {/* Cloud cover percentage */}
                     {weatherData.cloud_cover.afternoon}%
                   </div>
                 </div>
+                {/* Rainfall display section */}
                 <div className="flex flex-grow">
                   <div className="flex-1 text-lg md:text-xl lg:text-2xl">
-                    <img src={raindropIcon} className="w-20 h-20" alt="" />
+                    {/* Raindrop icon */}
+                    <img
+                      src={raindropIcon}
+                      className="w-20 h-20"
+                      alt="Raindrop"
+                    />
                   </div>
                   <div
                     id="weather-rainfall"
                     className="weather-data flex items-center flex-1 text-lg md:text-xl lg:text-2xl"
                   >
+                    {/* Total rainfall in mm */}
                     {weatherData.precipitation.total} mm
                   </div>
                 </div>
+                {/* Temperature display section */}
                 <div className="flex flex-grow">
                   <div className="flex-1 text-lg md:text-xl lg:text-2xl">
-                    <img src={tempIcon} className="w-20 h-20" alt="" />
+                    {/* Temperature icon */}
+                    <img
+                      src={tempIcon}
+                      className="w-20 h-20"
+                      alt="Temperature"
+                    />
                   </div>
                   <div
-                    id="weather-rainfall"
+                    id="weather-temperature"
                     className="weather-data flex items-center flex-1 text-lg md:text-xl lg:text-2xl"
                   >
+                    {/* Temperature in Celsius */}
                     {temperatureCelsius}°C
                   </div>
                 </div>
               </div>
+              {/* Main weather icon display section */}
               <div className="flex flex-col h-full flex-grow">
                 <div
                   id="weather-icon"
                   className="weather-data flex flex-col flex-1 items-center justify-center"
                 >
+                  {/* Weather condition icon */}
                   <img
                     src={weatherIcon}
                     alt="Weather icon"

@@ -3,58 +3,65 @@ import PropTypes from "prop-types";
 import useWeatherData from "../hooks/useWeatherData";
 import useCurrentLocation from "../hooks/useCurrentLocation";
 
+// Create a Context for the weather-related data and actions
 const WeatherContext = createContext();
 
 export const WeatherProvider = ({ children }) => {
+  // State to store the selected city
   const [city, setCity] = useState("");
+
+  // State to store the selected date
   const [date, setDate] = useState("");
+
+  // State to track whether the form has been submitted
   const [submitted, setSubmitted] = useState(false);
 
+  // Determine the base URL for API requests based on the environment (production or development)
   const baseUrl =
     process.env.NODE_ENV === "production"
       ? "https://my-weather-travel-app-2714255072bb.herokuapp.com"
       : "http://localhost:8000";
 
+  // Use the custom hook to fetch and manage weather data
   const {
-    weatherData,
-    temperatureCelsius,
-    tempIcon,
-    weatherIcon,
-    errorMessage,
-    resetWeatherData,
+    weatherData, // Contains the fetched weather data
+    temperatureCelsius, // Contains the temperature in Celsius
+    tempIcon, // Contains the icon representing the temperature
+    weatherIcon, // Contains the icon representing the weather condition
+    errorMessage, // Stores any error messages encountered during data fetching
+    resetWeatherData, // Function to reset weather-related state
   } = useWeatherData(city, date, submitted, baseUrl);
 
+  // Use the custom hook to handle getting the user's current location
   const { handleUseCurrentLocation } = useCurrentLocation(baseUrl, setCity);
 
+  // Function to reset all state variables to their initial values
   const resetAll = () => {
-    setCity("");
-    setDate("");
-    // setTemperatureCelsius(null);
-    // setWeatherData(null);
-    // setErrorMessage("");
-    // setWeatherIcon("");
-    setSubmitted(false);
-    resetWeatherData();
+    setCity(""); // Reset the city state to an empty string
+    setDate(""); // Reset the date state to an empty string
+    setSubmitted(false); // Reset the submitted state to false
+    resetWeatherData(); // Reset all weather-related state using the hook's reset function
 
-    console.log("Data reset");
+    console.log("Data reset"); // Log a message to indicate that the reset was successful
   };
 
   return (
+    // Provide the weather-related state and actions to any components that consume this context
     <WeatherContext.Provider
       value={{
-        city,
-        date,
-        setCity,
-        setDate,
-        temperatureCelsius,
-        weatherData,
-        errorMessage,
-        weatherIcon,
-        tempIcon,
-        handleUseCurrentLocation,
-        submitted,
-        setSubmitted,
-        resetAll,
+        city, // The currently selected city
+        date, // The currently selected date
+        setCity, // Function to update the city state
+        setDate, // Function to update the date state
+        temperatureCelsius, // The current temperature in Celsius
+        weatherData, // The fetched weather data
+        errorMessage, // Any error messages encountered
+        weatherIcon, // Icon representing the weather condition
+        tempIcon, // Icon representing the temperature
+        handleUseCurrentLocation, // Function to get and set the user's current location
+        submitted, // Tracks whether the form has been submitted
+        setSubmitted, // Function to update the submitted state
+        resetAll, // Function to reset all states to their initial values
       }}
     >
       {children}
@@ -62,8 +69,9 @@ export const WeatherProvider = ({ children }) => {
   );
 };
 
+// Type-checking for the component's props using PropTypes
 WeatherProvider.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired, // The child components that will be wrapped by this provider
 };
 
 export default WeatherContext;
