@@ -68,6 +68,7 @@ const useWeatherData = (city, date, submitted, baseUrl) => {
           // Check if the response is ok
           if (!response.ok) throw new Error("Network response was not ok");
           const data = await response.json();
+          console.log("Weather data:", data);
 
           // Calculate average temperature in Celsius
           const temperatureMin = data.temperature.min;
@@ -105,6 +106,14 @@ const useWeatherData = (city, date, submitted, baseUrl) => {
     }
   }, [city, date, submitted, baseUrl]);
 
+  const resetWeatherData = () => {
+    setWeatherData(null);
+    setTemperatureCelsius(null);
+    setTempIcon("");
+    setWeatherIcon("");
+    setErrorMessage("");
+  };
+
   // Return state variables for use in components
   return {
     weatherData,
@@ -112,6 +121,7 @@ const useWeatherData = (city, date, submitted, baseUrl) => {
     tempIcon,
     weatherIcon,
     errorMessage,
+    resetWeatherData,
   };
 };
 

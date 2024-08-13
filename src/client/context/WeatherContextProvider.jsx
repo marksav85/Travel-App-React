@@ -2,7 +2,6 @@ import { createContext, useState } from "react";
 import PropTypes from "prop-types";
 import useWeatherData from "../hooks/useWeatherData";
 import useCurrentLocation from "../hooks/useCurrentLocation";
-import useResetAll from "../hooks/useResetAll";
 
 const WeatherContext = createContext();
 
@@ -22,11 +21,23 @@ export const WeatherProvider = ({ children }) => {
     tempIcon,
     weatherIcon,
     errorMessage,
+    resetWeatherData,
   } = useWeatherData(city, date, submitted, baseUrl);
 
   const { handleUseCurrentLocation } = useCurrentLocation(baseUrl, setCity);
 
-  const resetAll = useResetAll();
+  const resetAll = () => {
+    setCity("");
+    setDate("");
+    // setTemperatureCelsius(null);
+    // setWeatherData(null);
+    // setErrorMessage("");
+    // setWeatherIcon("");
+    setSubmitted(false);
+    resetWeatherData();
+
+    console.log("Data reset");
+  };
 
   return (
     <WeatherContext.Provider
