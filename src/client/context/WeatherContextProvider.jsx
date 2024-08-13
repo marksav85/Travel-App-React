@@ -19,7 +19,7 @@ export const WeatherProvider = ({ children }) => {
   // Determine the base URL for API requests based on the environment (production or development)
   const baseUrl =
     process.env.NODE_ENV === "production"
-      ? "https://my-weather-travel-app-2714255072bb.herokuapp.com"
+      ? "https://travel-app-react-db2mhojfi-marks-projects-05be3560.vercel.app"
       : "http://localhost:8000";
 
   // Use the custom hook to fetch and manage weather data
