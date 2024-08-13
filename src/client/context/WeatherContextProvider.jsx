@@ -52,6 +52,7 @@ export const WeatherProvider = ({ children }) => {
         weatherIcon,
         tempIcon,
         handleUseCurrentLocation,
+        submitted,
         setSubmitted,
         resetAll,
       }}

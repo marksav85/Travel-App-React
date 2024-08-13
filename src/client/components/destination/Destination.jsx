@@ -10,6 +10,7 @@ const Destination = () => {
     setCity,
     setDate,
     handleUseCurrentLocation,
+    submitted,
     setSubmitted,
     resetAll,
   } = useContext(WeatherContext); // Use WeatherContext
@@ -78,6 +79,12 @@ const Destination = () => {
                     type="text"
                     name="city"
                     value={city}
+                    onChange={(event) => {
+                      if (!submitted) {
+                        // Check if submitted is false
+                        setCity(event.target.value);
+                      }
+                    }}
                     className="w-full text-sm lg:text-base p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Destination e.g., Berlin"
                     required
@@ -87,6 +94,7 @@ const Destination = () => {
                   type="button"
                   onClick={handleUseCurrentLocation}
                   className="ml-2 mr-2"
+                  disabled={submitted} // Disable the button if submitted is true
                 >
                   <FontAwesomeIcon icon={faLocationCrosshairs} />
                 </button>
@@ -105,11 +113,13 @@ const Destination = () => {
                     name="travel-date"
                     className="w-full text-sm md:text-base p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
+                    disabled={submitted} // Disable the date input if submitted is true
                   />
                   <button
                     type="button"
                     onClick={setToday}
                     className="ml-2 mr-2"
+                    disabled={submitted} // Disable the button if submitted is true
                   >
                     <FontAwesomeIcon icon={faCalendarWeek} />
                   </button>
@@ -142,13 +152,15 @@ const Destination = () => {
                      md:p-3  lg:p-4"
         >
           <div>
-            <p>* Future forecast available for up to 1.5 years in the future</p>
             <p>
-              ** Historical weather data available up until 40+ years in the
+              i. Future forecast available for up to 1.5 years in the future
+            </p>
+            <p>
+              ii. Historical weather data available up until 40+ years in the
               past
             </p>
             <p>
-              *** Temperature, cloud, and rainfall are measured as averages
+              iii. Temperature, cloud, and rainfall are measured as averages
               throughout the day
             </p>
           </div>
