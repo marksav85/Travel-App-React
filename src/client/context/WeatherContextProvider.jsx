@@ -17,10 +17,8 @@ export const WeatherProvider = ({ children }) => {
   const [submitted, setSubmitted] = useState(false);
 
   // Determine the base URL for API requests based on the environment (production or development)
-  const baseUrl =
-    process.env.NODE_ENV === "production"
-      ? "https://travel-app-react-db2mhojfi-marks-projects-05be3560.vercel.app"
-      : "http://localhost:8000";
+  // Determine the base URL for API requests based on environment variables
+  const baseUrl = process.env.VITE_API_BASE_URL || "http://localhost:8000";
 
   // Use the custom hook to fetch and manage weather data
   const {
