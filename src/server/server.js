@@ -18,7 +18,7 @@ app.use(bodyParser.json()); // Parse JSON data
 // CORS configuration
 app.use(
   cors({
-    origin: "https://travel-app-react-coral.vercel.app/", // Vercel deployment URL
+    origin: "https://travel-app-react-coral.vercel.app", // Vercel deployment URL
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
