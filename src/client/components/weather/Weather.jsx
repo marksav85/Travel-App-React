@@ -99,15 +99,15 @@ const Weather = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col flex-grow">
+              <div className="flex flex-col h-full flex-grow">
                 <div
                   id="weather-icon"
-                  className="weather-data flex flex-col flex-1 items-center justify-center mb-4"
+                  className="weather-data flex flex-col flex-1 items-center justify-center"
                 >
                   <img
                     src={weatherIcon}
                     alt="Weather icon"
-                    className="w-20 h-20 mx-auto"
+                    className="w-48 h-48 mx-auto"
                   />
                 </div>
               </div>
