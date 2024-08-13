@@ -3,7 +3,7 @@ import MainView from "./components/MainView";
 
 function App() {
   return (
-    <div className="flex flex-col h-[100vh]">
+    <div className="flex flex-col md:h-[100vh]">
       <Header />
       <MainView />
     </div>
