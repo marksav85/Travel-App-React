@@ -15,7 +15,14 @@ const app = express();
 // Middleware for parsing incoming request bodies in a middleware before your handlers
 app.use(bodyParser.urlencoded({ extended: false })); // Parse URL-encoded data (form submissions)
 app.use(bodyParser.json()); // Parse JSON data
-app.use(cors()); // Enable Cross-Origin Resource Sharing (CORS) for all routes
+// CORS configuration
+app.use(
+  cors({
+    origin: "https://travel-app-react-coral.vercel.app/", // Vercel deployment URL
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+); // Enable Cross-Origin Resource Sharing (CORS) for all routes
 
 // ES Modules do not have __dirname, so must be computed manually
 const __filename = fileURLToPath(import.meta.url);
