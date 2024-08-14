@@ -25,26 +25,27 @@ The **Travel Weather App** is a React-based application that allows users to che
 ## Installation
 
 1. **Clone the repository**:
-   git clone https://github.com/marksav85/Travel-App-React.git
-   cd travel-app-react
+   - git clone https://github.com/marksav85/Travel-App-React.git
+   - cd travel-app-react
 2. **Install dependencies:**:
-   npm install
+   - npm install
 3. **Set up environment variables:**:
-   i. Visit [OpenWeatherMap](https://openweathermap.org/api) and obtain an API key for _One Call API 3.0_
-   ii. Create a .env file in the root directory and add the following environment variables:
-   iii. VITE*API_KEY=\_your_One_Call_api_key_here*
+
+   - Visit [OpenWeatherMap](https://openweathermap.org/api) and obtain an API key for _One Call API 3.0_
+   - Create a .env file in the root directory and add the following environment variables:
+   - VITE_API_KEY=(Add you One Call API Key here)
 
 4. **Start the development server:**:
-   npm run dev
+   - npm run dev
 
 ## Usage
 
-**Enter a City and Date**: Use the form to input a city and travel date, then click "Submit" to fetch weather data.
-**Use Current Location**: Click the location icon to automatically set the city based on your current location.
-**Reset**: Use the "Reset" button to clear the form and reset the application state.
+- **Enter a City and Date**: Use the form to input a city and travel date, then click "Submit" to fetch weather data.
+- **Use Current Location**: Click the location icon to automatically set the city based on your current location.
+- **Reset**: Use the "Reset" button to clear the form and reset the application state.
 
 ## Acknowledgements
 
-**OpenWeatherMap**: For weather data API.
-**Lottie**: For interactive animations.
-**FontAwesome**: For iconography.
+- **OpenWeatherMap**: For weather data API.
+- **Lottie**: For interactive animations.
+- **FontAwesome**: For iconography.
