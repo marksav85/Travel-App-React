@@ -14,8 +14,10 @@ The **Travel Weather App** is a React-based application that allows users to che
 ## Technologies Used
 
 - **React**: Frontend framework for building user interfaces.
-- **Express.js**: Backend server for handling API requests (if using serverless functions or a separate backend).
+- **Axios**: HTTP client for making API requests to fetch weather data.
 - **Node.js**: Runtime environment for executing server-side code.
+- **Vite**: Build tool and development server.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
 - **Vercel**: Deployment platform for hosting the React app.
 - **Lottie**: Animation library for interactive animations.
 - **FontAwesome**: Icon library used for interactive buttons.
@@ -28,17 +30,12 @@ The **Travel Weather App** is a React-based application that allows users to che
 2. **Install dependencies:**:
    npm install
 3. **Set up environment variables:**:
-   Create a .env file in the root directory and add the following environment variables:
-   REACT_APP_WEATHER_API_KEY=_your_api_key_here_
+   i. Visit [OpenWeatherMap](https://openweathermap.org/api) and obtain an API key for _One Call API 3.0_
+   ii. Create a .env file in the root directory and add the following environment variables:
+   iii. VITE*API_KEY=\_your_One_Call_api_key_here*
+
 4. **Start the development server:**:
-   npm start
-
-## Deployment
-
-The app is deployed on Vercel. To deploy your changes:
-
-- Push your changes to the main branch on GitHub.
-- Vercel will automatically build and deploy the latest version of your app.
+   npm run dev
 
 ## Usage
 
