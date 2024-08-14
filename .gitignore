@@ -25,5 +25,3 @@ dist-ssr
 .env
 public/media/originals
 public/weather-icons-master
-.env.production
-.env.development
