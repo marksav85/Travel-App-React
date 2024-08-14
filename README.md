@@ -33,7 +33,7 @@ The **Travel Weather App** is a React-based application that allows users to che
 
    - Visit [OpenWeatherMap](https://openweathermap.org/api) and obtain an API key for _One Call API 3.0_
    - Create a .env file in the root directory and add the following environment variables:
-   - VITE_API_KEY=(Add you One Call API Key here)
+   - VITE_API_KEY=(Add your One Call API Key here)
 
 4. **Start the development server:**:
    - npm run dev
