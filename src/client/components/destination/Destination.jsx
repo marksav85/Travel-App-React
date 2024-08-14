@@ -46,7 +46,6 @@ const Destination = () => {
   // Handle the form reset
   const handleReset = () => {
     resetAll(); // Call the resetAll function from the context to reset all data
-    console.log("Destination: Form reset");
 
     // Reset the form fields
     const cityInput = document.getElementById("city");
