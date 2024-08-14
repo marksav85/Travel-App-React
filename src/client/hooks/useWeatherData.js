@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
-// Import weather icons for different weather conditions
+// Import weather icons for different conditions
 import sunIcon from "/media/weather-icons/sun.svg";
 import overcastIcon from "/media/weather-icons/overcast.svg";
 import rainIcon from "/media/weather-icons/rain.svg";
@@ -8,7 +9,6 @@ import partCloudIcon from "/media/weather-icons/partly-cloudy-day.svg";
 import partRainIcon from "/media/weather-icons/partly-cloudy-day-rain.svg";
 import partSnowIcon from "/media/weather-icons/partly-cloudy-day-snow.svg";
 
-// Import temperature icons for different temperature ranges
 import hotIcon from "/media/weather-icons/thermometers/thermometer-hot.svg";
 import warmIcon from "/media/weather-icons/thermometers/thermometer-warm.svg";
 import mildIcon from "/media/weather-icons/thermometers/thermometer-mild.svg";
@@ -17,125 +17,107 @@ import freezingIcon from "/media/weather-icons/thermometers/thermometer-freezing
 
 // Function to determine the appropriate weather icon based on weather conditions
 const getWeatherIcon = (cloudCover, rainfall, temperatureCelsius) => {
-  // Return overcast icon if cloud cover is high and there is little to no rainfall
-  if (cloudCover > 70 && rainfall <= 0.1) return overcastIcon;
-
-  // Return partly cloudy icon if cloud cover is moderate and there is little to no rainfall
-  if (cloudCover > 20 && rainfall <= 0.1) return partCloudIcon;
-
-  // Return partly cloudy with rain icon if cloud cover is moderate, rainfall is present, and temperature is above freezing
+  if (cloudCover > 70 && rainfall <= 0.1) return overcastIcon; // Overcast weather
+  if (cloudCover > 20 && rainfall <= 0.1) return partCloudIcon; // Partly cloudy weather
   if (cloudCover > 20 && rainfall > 0.1 && temperatureCelsius >= 0)
-    return partRainIcon;
-
-  // Return partly cloudy with snow icon if cloud cover is moderate, rainfall is present, and temperature is below freezing
+    return partRainIcon; // Partly cloudy with rain above freezing
   if (cloudCover > 20 && rainfall > 0.1 && temperatureCelsius < 0)
-    return partSnowIcon;
-
-  // Return rain icon if rainfall is significant
-  if (rainfall >= 0.5) return rainIcon;
-
-  // Default to sunny icon if none of the above conditions are met
-  return sunIcon;
+    return partSnowIcon; // Partly cloudy with snow below freezing
+  if (rainfall >= 0.5) return rainIcon; // Rainy weather
+  return sunIcon; // Default to sunny weather
 };
 
 // Function to determine the appropriate temperature icon based on temperature in Celsius
 const getTempIcon = (temperatureCelsius) => {
-  // Return hot icon if temperature is 30°C or above
-  if (temperatureCelsius >= 30) return hotIcon;
-
-  // Return warm icon if temperature is between 20°C and 29°C
-  if (temperatureCelsius >= 20) return warmIcon;
-
-  // Return mild icon if temperature is between 10°C and 19°C
-  if (temperatureCelsius >= 10) return mildIcon;
-
-  // Return cold icon if temperature is between 0°C and 9°C
-  if (temperatureCelsius >= 0) return coldIcon;
-
-  // Return freezing icon if temperature is below 0°C
-  return freezingIcon;
+  if (temperatureCelsius >= 30) return hotIcon; // Hot weather
+  if (temperatureCelsius >= 20) return warmIcon; // Warm weather
+  if (temperatureCelsius >= 10) return mildIcon; // Mild weather
+  if (temperatureCelsius >= 0) return coldIcon; // Cold weather
+  return freezingIcon; // Freezing weather
 };
 
-// Custom hook to fetch and manage weather data
-const useWeatherData = (city, date, submitted, baseUrl) => {
-  // State variables to store fetched weather data, temperature, error messages, and icons
-  const [temperatureCelsius, setTemperatureCelsius] = useState(null);
+// Custom hook to fetch and process weather data
+const useWeatherData = (city, date, submitted) => {
+  // State to store the fetched weather data
   const [weatherData, setWeatherData] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
+  // State to store the temperature in Celsius
+  const [temperatureCelsius, setTemperatureCelsius] = useState(null);
+  // State to store the weather icon URL
   const [weatherIcon, setWeatherIcon] = useState("");
+  // State to store the temperature icon URL
   const [tempIcon, setTempIcon] = useState("");
+  // State to store any error messages
+  const [errorMessage, setErrorMessage] = useState("");
+  // State to track the loading status
+  const [loading, setLoading] = useState(true);
 
-  // useEffect hook to fetch weather data when city, date, or submitted state changes
+  // Effect hook to fetch weather data when the city, date, and submitted state change
   useEffect(() => {
-    // Only fetch weather data if city, date, and submitted flag are all present
+    // Check if all required conditions are met to fetch weather data
     if (city && date && submitted) {
-      const fetchWeatherData = async () => {
+      const fetchWeather = async () => {
         try {
-          // Construct the API URL with query parameters for city and date
-          const response = await fetch(
-            `${baseUrl}/weather?city=${city}&date=${date}`
-          );
+          setLoading(true); // Set loading state to true before starting the fetch
+          setErrorMessage(""); // Clear any previous error messages
 
-          // Check if the response from the server is successful
-          if (!response.ok) throw new Error("Network response was not ok");
+          const apiKey = import.meta.env.VITE_API_KEY; // API key for OpenWeatherMap
 
-          // Parse the JSON data returned from the API
-          const data = await response.json();
-          console.log("Weather data:", data);
+          // Fetch geocoding data to get latitude and longitude based on city name
+          const geocodingUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${apiKey}`;
+          const geocodingResponse = await axios.get(geocodingUrl);
+          const { lat, lon } = geocodingResponse.data[0]; // Extract latitude and longitude
 
-          // Calculate the average temperature in Celsius from the min and max temperatures (K -> C)
+          // Fetch weather data using latitude, longitude, and date
+          const weatherUrl = `https://api.openweathermap.org/data/3.0/onecall/day_summary?lat=${lat}&lon=${lon}&date=${date}&appid=${apiKey}`;
+          const weatherResponse = await axios.get(weatherUrl);
+          const data = weatherResponse.data; // Extract weather data
+
+          // Calculate the average temperature in Celsius
           const temperatureMin = data.temperature.min;
           const temperatureMax = data.temperature.max;
           const averageTemperature = (temperatureMin + temperatureMax) / 2;
-          const temperatureCelsius = Math.round(averageTemperature - 273.15); // Convert Kelvin to Celsius
-          setTemperatureCelsius(temperatureCelsius);
+          const tempCelsius = Math.round(averageTemperature - 273.15); // Convert Kelvin to Celsius
+          setTemperatureCelsius(tempCelsius);
 
-          // Determine the appropriate temperature icon based on the calculated temperature
-          const tempIcon = getTempIcon(temperatureCelsius);
-
-          // Extract relevant weather data for determining weather icons
+          // Determine the appropriate icons based on weather conditions
+          const tempIcon = getTempIcon(tempCelsius);
           const cloudCover = data.cloud_cover.afternoon;
           const rainfall = data.precipitation.total;
+          const weatherIcon = getWeatherIcon(cloudCover, rainfall, tempCelsius);
 
-          // Determine the appropriate weather icon based on cloud cover, rainfall, and temperature
-          const weatherIcon = getWeatherIcon(
-            cloudCover,
-            rainfall,
-            temperatureCelsius
-          );
-
-          // Update the state with fetched weather data, icons, and clear any previous errors
+          // Update states with the fetched weather data and icons
           setWeatherData(data);
           setWeatherIcon(weatherIcon);
           setTempIcon(tempIcon);
-          setErrorMessage("");
+          setErrorMessage(""); // Clear any previous error messages
         } catch (error) {
-          // Handle any errors that occur during data fetching
-          setErrorMessage("Location not found");
+          setErrorMessage("Error fetching weather data"); // Set error message if fetching fails
+        } finally {
+          setLoading(false); // Set loading state to false once fetching is complete
         }
       };
 
-      // Call the function to fetch weather data
-      fetchWeatherData();
+      fetchWeather(); // Call the fetch function
     }
-  }, [city, date, submitted, baseUrl]); // Dependency array to refetch data when any of these values change
+  }, [city, date, submitted]); // Dependencies to trigger the effect
 
-  // Function to reset the weather-related state variables
+  // Function to reset the weather data and related states
   const resetWeatherData = () => {
     setWeatherData(null);
     setTemperatureCelsius(null);
-    setTempIcon("");
     setWeatherIcon("");
+    setTempIcon("");
     setErrorMessage("");
   };
 
-  // Return the state variables and reset function for use in components
+  // Return the weather data, icons, and states
   return {
     weatherData,
     temperatureCelsius,
     tempIcon,
     weatherIcon,
     errorMessage,
+    loading,
     resetWeatherData,
   };
 };
