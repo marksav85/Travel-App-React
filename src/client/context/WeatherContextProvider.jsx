@@ -16,10 +16,6 @@ export const WeatherProvider = ({ children }) => {
   // State to track whether the form has been submitted
   const [submitted, setSubmitted] = useState(false);
 
-  // Determine the base URL for API requests based on the environment (production or development)
-  // Determine the base URL for API requests based on environment variables
-  const baseUrl = process.env.VITE_API_BASE_URL || "http://localhost:8000";
-
   // Use the custom hook to fetch and manage weather data
   const {
     weatherData, // Contains the fetched weather data
@@ -28,10 +24,10 @@ export const WeatherProvider = ({ children }) => {
     weatherIcon, // Contains the icon representing the weather condition
     errorMessage, // Stores any error messages encountered during data fetching
     resetWeatherData, // Function to reset weather-related state
-  } = useWeatherData(city, date, submitted, baseUrl);
+  } = useWeatherData(city, date, submitted);
 
   // Use the custom hook to handle getting the user's current location
-  const { handleUseCurrentLocation } = useCurrentLocation(baseUrl, setCity);
+  const { handleUseCurrentLocation } = useCurrentLocation(setCity);
 
   // Function to reset all state variables to their initial values
   const resetAll = () => {
