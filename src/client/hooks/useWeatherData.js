@@ -63,7 +63,7 @@ const useWeatherData = (city, date, submitted) => {
           const apiKey = import.meta.env.VITE_API_KEY; // API key for OpenWeatherMap
 
           // Fetch geocoding data to get latitude and longitude based on city name
-          const geocodingUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${apiKey}`;
+          const geocodingUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${apiKey}`;
           const geocodingResponse = await axios.get(geocodingUrl);
           const { lat, lon } = geocodingResponse.data[0]; // Extract latitude and longitude
 
