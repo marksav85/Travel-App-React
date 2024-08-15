@@ -1,13 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 // Custom hook to get the user's current location and fetch the corresponding city name
 const useCurrentLocation = (setCity) => {
   // State to store the user's coordinates (latitude and longitude)
   const [coords, setCoords] = useState(null);
-
-  // State to store the city name fetched from the API based on coordinates
-  const [city, setCityState] = useState("");
 
   // State to track the loading status while fetching data
   const [loading, setLoading] = useState(false);
@@ -28,8 +25,9 @@ const useCurrentLocation = (setCity) => {
       // Perform the API request to get the city name based on coordinates
       const response = await axios.get(reverseGeocodingUrl);
 
-      // Set the city state with the fetched city name, or "Unknown location" if no name is found
-      setCityState(response.data[0]?.name || "Unknown location");
+      // Set the city state in the context using the provided setCity function
+      const fetchedCity = response.data[0]?.name || "Unknown location";
+      setCity(fetchedCity);
     } catch (error) {
       // Set an error message if the API request fails
       setErrorMessage("Error fetching city name");
@@ -63,14 +61,6 @@ const useCurrentLocation = (setCity) => {
       setErrorMessage("Geolocation is not supported by this browser.");
     }
   };
-
-  // Effect hook to update the city state whenever the city name from the API changes
-  useEffect(() => {
-    if (city) {
-      // Update the parent component with the city name by calling the provided setCity function
-      setCity(city);
-    }
-  }, [city, setCity]);
 
   // Return an object with functions and state variables to be used by the component
   return {
