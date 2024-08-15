@@ -16,6 +16,7 @@ const Destination = () => {
     submitted,
     setSubmitted,
     resetAll,
+    weatherRef,
   } = useContext(WeatherContext);
 
   // Function to set the date input to today's date
@@ -41,6 +42,10 @@ const Destination = () => {
     setCity(city); // Update the city in the context
     setDate(date); // Update the date in the context
     setSubmitted(true); // Mark the form as submitted in the context
+
+    if (weatherRef.current) {
+      weatherRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   // Handle the form reset

@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import useWeatherData from "../hooks/useWeatherData";
 import useCurrentLocation from "../hooks/useCurrentLocation";
@@ -15,6 +15,8 @@ export const WeatherProvider = ({ children }) => {
 
   // State to track whether the form has been submitted
   const [submitted, setSubmitted] = useState(false);
+
+  const weatherRef = useRef(null); // Create a ref for the Weather component
 
   // Use the custom hook to fetch and manage weather data
   const {
@@ -56,6 +58,7 @@ export const WeatherProvider = ({ children }) => {
         submitted, // Tracks whether the form has been submitted
         setSubmitted, // Function to update the submitted state
         resetAll, // Function to reset all states to their initial values
+        weatherRef, // Reference to the Weather component
       }}
     >
       {children}
