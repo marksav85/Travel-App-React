@@ -1,4 +1,4 @@
-import { useContext, forwardRef } from "react"; // Import forwardRef along with other necessary hooks
+import { useContext } from "react"; // Import the useContext hook to access context values
 import WeatherContext from "../../context/WeatherContextProvider"; // Import the WeatherContext to get weather-related data
 import Lottie from "lottie-react"; // Import Lottie for rendering animations
 import travelAnimation from "../../../assets/travel-animation.json"; // Import the travel animation JSON for Lottie
@@ -19,8 +19,7 @@ const formatDate = (dateString) => {
 };
 
 // The Weather component displays weather information based on the current context
-const Weather = forwardRef((props, ref) => {
-  // Wrap the component with forwardRef
+const Weather = () => {
   // Destructure necessary values from WeatherContext using useContext hook
   const { city, temperatureCelsius, weatherData, tempIcon, weatherIcon } =
     useContext(WeatherContext);
@@ -28,10 +27,7 @@ const Weather = forwardRef((props, ref) => {
   // If no weather data is available, render a loading animation
   if (!weatherData) {
     return (
-      <div
-        className="w-full h-600px max-w-md bg-white flex shadow-lg rounded-lg relative"
-        ref={ref}
-      >
+      <div className="w-full h-600px max-w-md bg-white flex shadow-lg rounded-lg relative">
         {/* Render a Lottie animation while waiting for data */}
         <Lottie
           animationData={travelAnimation} // Use the travel animation
@@ -149,9 +145,6 @@ const Weather = forwardRef((props, ref) => {
       </div>
     </div>
   );
-});
-
-// Set a display name for the forwardRef component
-Weather.displayName = "Weather";
+};
 
 export default Weather;
