@@ -55,7 +55,7 @@ const Weather = () => {
         {/* Weather card header displaying the city name */}
         <div
           id="weather-header"
-          className="bg-blue-500 text-white rounded-t-lg flex-shrink-0 p-2 md:p-4 lg:p-6"
+          className="bg-blue-500 text-white rounded-t-lg flex-shrink-0 p-4 lg:p-6"
         >
           {/* City name displayed in the header */}
           <h2 className="text-lg md:text-xl lg:text-2xl font-semibold text-center">

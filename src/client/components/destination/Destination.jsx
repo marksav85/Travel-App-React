@@ -62,7 +62,7 @@ const Destination = () => {
       {/* Header section of the destination form */}
       <div
         id="destination-header"
-        className="bg-blue-500 text-white rounded-t-lg flex-shrink-0 p-2 md:p-4 lg:p-6"
+        className="bg-blue-500 text-white rounded-t-lg flex-shrink-0 p-4 lg:p-6"
       >
         <h2 className="text-lg md:text-xl lg:text-2xl font-semibold">
           Destination
