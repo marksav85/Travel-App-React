@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 // Import weather icons for different conditions
-import sunIcon from "/media/weather-icons/sun.svg";
 import overcastIcon from "/media/weather-icons/overcast.svg";
-import rainIcon from "/media/weather-icons/rain.svg";
 import partCloudIcon from "/media/weather-icons/partly-cloudy-day.svg";
+import rainIcon from "/media/weather-icons/rain.svg";
 import partRainIcon from "/media/weather-icons/partly-cloudy-day-rain.svg";
+import snowIcon from "/media/weather-icons/snow.svg";
 import partSnowIcon from "/media/weather-icons/partly-cloudy-day-snow.svg";
+import sunIcon from "/media/weather-icons/sun.svg";
 
 import hotIcon from "/media/weather-icons/thermometers/thermometer-hot.svg";
 import warmIcon from "/media/weather-icons/thermometers/thermometer-warm.svg";
@@ -15,15 +16,43 @@ import mildIcon from "/media/weather-icons/thermometers/thermometer-mild.svg";
 import coldIcon from "/media/weather-icons/thermometers/thermometer-cold.svg";
 import freezingIcon from "/media/weather-icons/thermometers/thermometer-freezing.svg";
 
+// Function to return a string description based on cloud cover percentage
+const getCloudCover = (cloudCover) => {
+  if (cloudCover >= 0 && cloudCover <= 20) return "Clear"; // Return "Sunny/Clear" if cloud cover is between 0% and 10%
+  if (cloudCover > 20 && cloudCover <= 30) return "Mostly Sunny"; // Return "Mostly Sunny" if cloud cover is between 21% and 30%
+  if (cloudCover > 30 && cloudCover <= 60) return "Partly Cloudy"; // Return "Partly Cloudy" if cloud cover is between 31% and 60%
+  if (cloudCover > 60 && cloudCover <= 70) return "Partly Sunny"; // Return "Partly Sunny" if cloud cover is between 61% and 70%
+  if (cloudCover > 70 && cloudCover <= 90) return "Mostly Cloudy"; // Return "Mostly Cloudy" if cloud cover is between 71% and 90%
+  if (cloudCover > 90 && cloudCover <= 100) return "Overcast"; // Return "Overcast" if cloud cover is between 91% and 100%
+  return "No data"; // Return an error message if the input is out of bounds
+};
+
+// Function to return a string description based on total rainfall in a day in mm
+const getRainfall = (rainfall) => {
+  if (rainfall < 0.1) return "No Rain"; // Return 0 if rainfall is less than 0.1 mm
+  if (rainfall >= 0.1 && rainfall < 1) return "Very Light Rain"; // Return "Very Light Rain" if rainfall is between 0.1mm and 1mm
+  if (rainfall >= 1 && rainfall < 10) return "Light Rain"; // Return "Light Rain" if rainfall is between 1mm and 10mm
+  if (rainfall >= 10 && rainfall < 30) return "Moderate Rain"; // Return "Moderate Rain" if rainfall is between 10mm and 30mm
+  if (rainfall >= 30 && rainfall < 70) return "Heavy Rain"; // Return "Heavy Rain" if rainfall is between 30mm and 70mm
+  if (rainfall >= 70 && rainfall < 150) return "Very Heavy Rain"; // Return "Very Heavy Rain" if rainfall is between 70mm and 150mm
+  return "Extreme Rain"; // Return "Extreme Rain" if rainfall is above 150mm
+};
+
 // Function to determine the appropriate weather icon based on weather conditions
 const getWeatherIcon = (cloudCover, rainfall, temperatureCelsius) => {
+  // Cloud cover but no rain or snow
   if (cloudCover > 70 && rainfall <= 0.1) return overcastIcon; // Overcast weather
   if (cloudCover > 20 && rainfall <= 0.1) return partCloudIcon; // Partly cloudy weather
+  // Cloud cover with rain
+  if (cloudCover > 70 && rainfall > 0.1 && temperatureCelsius >= 0)
+    return rainIcon; // Cloudy with rain above freezing
   if (cloudCover > 20 && rainfall > 0.1 && temperatureCelsius >= 0)
     return partRainIcon; // Partly cloudy with rain above freezing
+  // Cloud cover with snow
+  if (cloudCover > 70 && rainfall > 0.1 && temperatureCelsius < 0)
+    return snowIcon; // Cloudy with snow below freezing
   if (cloudCover > 20 && rainfall > 0.1 && temperatureCelsius < 0)
     return partSnowIcon; // Partly cloudy with snow below freezing
-  if (rainfall >= 0.5) return rainIcon; // Rainy weather
   return sunIcon; // Default to sunny weather
 };
 
@@ -87,6 +116,7 @@ const useWeatherData = (city, date, submitted) => {
 
           // Update states with the fetched weather data and icons
           setWeatherData(data);
+          console.log("Weather Data: ", data);
           setWeatherIcon(weatherIcon);
           setTempIcon(tempIcon);
           setErrorMessage(""); // Clear any previous error messages
@@ -113,6 +143,8 @@ const useWeatherData = (city, date, submitted) => {
   // Return the weather data, icons, and states
   return {
     weatherData,
+    getCloudCover,
+    getRainfall,
     temperatureCelsius,
     tempIcon,
     weatherIcon,

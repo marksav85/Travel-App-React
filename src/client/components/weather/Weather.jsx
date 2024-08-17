@@ -21,8 +21,15 @@ const formatDate = (dateString) => {
 // The Weather component displays weather information based on the current context
 const Weather = () => {
   // Destructure necessary values from WeatherContext using useContext hook
-  const { city, temperatureCelsius, weatherData, tempIcon, weatherIcon } =
-    useContext(WeatherContext);
+  const {
+    city,
+    getCloudCover,
+    getRainfall,
+    temperatureCelsius,
+    weatherData,
+    tempIcon,
+    weatherIcon,
+  } = useContext(WeatherContext);
 
   // If no weather data is available, render a loading animation
   if (!weatherData) {
@@ -85,7 +92,7 @@ const Weather = () => {
                     className="weather-data flex items-center flex-1 text-lg md:text-xl lg:text-2xl"
                   >
                     {/* Cloud cover percentage */}
-                    {weatherData.cloud_cover.afternoon}%
+                    {getCloudCover(weatherData.cloud_cover.afternoon)}
                   </div>
                 </div>
                 {/* Rainfall display section */}
@@ -103,7 +110,7 @@ const Weather = () => {
                     className="weather-data flex items-center flex-1 text-lg md:text-xl lg:text-2xl"
                   >
                     {/* Total rainfall in mm */}
-                    {weatherData.precipitation.total} mm
+                    {getRainfall(weatherData.precipitation.total)}
                   </div>
                 </div>
                 {/* Temperature display section */}

@@ -19,6 +19,8 @@ export const WeatherProvider = ({ children }) => {
   // Use the custom hook to fetch and manage weather data
   const {
     weatherData, // Contains the fetched weather data
+    getCloudCover, // Function to determine cloud cover based on data
+    getRainfall, // Function to determine rainfall based on data
     temperatureCelsius, // Contains the temperature in Celsius
     tempIcon, // Contains the icon representing the temperature
     weatherIcon, // Contains the icon representing the weather condition
@@ -47,6 +49,8 @@ export const WeatherProvider = ({ children }) => {
         date, // The currently selected date
         setCity, // Function to update the city state
         setDate, // Function to update the date state
+        getCloudCover, // Function to determine cloud cover based on data
+        getRainfall, // Function to determine rainfall based on data
         temperatureCelsius, // The current temperature in Celsius
         weatherData, // The fetched weather data
         errorMessage, // Any error messages encountered
